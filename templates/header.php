@@ -47,10 +47,10 @@ $activePage = $activePage ?? '';
     <nav class="sidebar-nav">
       <div class="nav-section-label">Main</div>
       <a href="/pages/dashboard.php" class="nav-item <?= $activePage === 'dashboard' ? 'active' : '' ?>">
-        <span class="nav-icon">⊞</span> Dashboard
+        <span class="nav-icon">⊞</span><span class="nav-label">Dashboard</span>
       </a>
       <a href="/pages/notifications.php" class="nav-item <?= $activePage === 'notifications' ? 'active' : '' ?>">
-        <span class="nav-icon">🔔</span> Notifications
+        <span class="nav-icon">🔔</span><span class="nav-label">Notifications</span>
         <?php if (($unreadCount ?? 0) > 0): ?>
           <span class="nav-badge"><?= (int)$unreadCount ?></span>
         <?php endif; ?>
@@ -60,18 +60,17 @@ $activePage = $activePage ?? '';
       <?php if (!empty($sidebarGroups)): ?>
         <?php foreach ($sidebarGroups as $g): ?>
           <a href="/pages/group.php?id=<?= (int)$g['group_id'] ?>" class="nav-item <?= (($activePage === 'group') && (($_GET['id'] ?? '') == $g['group_id'])) ? 'active' : '' ?>">
-            <span class="nav-icon">◈</span>
-            <?= htmlspecialchars($g['group_name'], ENT_QUOTES) ?>
+            <span class="nav-icon">◈</span><span class="nav-label"><?= htmlspecialchars($g['group_name'], ENT_QUOTES) ?></span>
           </a>
         <?php endforeach; ?>
       <?php endif; ?>
       <a href="/pages/group-create.php" class="nav-item">
-        <span class="nav-icon">+</span> New Group
+        <span class="nav-icon">+</span><span class="nav-label">New Group</span>
       </a>
 
       <div class="nav-section-label">Account</div>
       <a href="/pages/profile.php" class="nav-item <?= $activePage === 'profile' ? 'active' : '' ?>">
-        <span class="nav-icon">◉</span> Profile
+        <span class="nav-icon">◉</span><span class="nav-label">Profile</span>
       </a>
     </nav>
 

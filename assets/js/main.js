@@ -45,9 +45,9 @@ const Toast = (() => {
     init();
     const colors = {
       success: { bg: 'rgba(78,189,138,0.12)', border: 'rgba(78,189,138,0.3)', color: '#4ebd8a', icon: '✓' },
-      error:   { bg: 'rgba(224,85,85,0.12)',  border: 'rgba(224,85,85,0.3)',  color: '#e05555', icon: '✕' },
+      error: { bg: 'rgba(224,85,85,0.12)', border: 'rgba(224,85,85,0.3)', color: '#e05555', icon: '✕' },
       warning: { bg: 'rgba(224,160,48,0.12)', border: 'rgba(224,160,48,0.3)', color: '#e0a030', icon: '⚠' },
-      info:    { bg: 'rgba(201,168,76,0.1)',  border: 'rgba(201,168,76,0.25)',color: '#c9a84c', icon: 'ℹ' }
+      info: { bg: 'rgba(201,168,76,0.1)', border: 'rgba(201,168,76,0.25)', color: '#c9a84c', icon: 'ℹ' }
     };
     const c = colors[type] || colors.info;
     const el = document.createElement('div');
@@ -80,8 +80,10 @@ const Toast = (() => {
     }, duration);
   }
 
-  return { success: m => show(m,'success'), error: m => show(m,'error'),
-           warning: m => show(m,'warning'), info: m => show(m,'info') };
+  return {
+    success: m => show(m, 'success'), error: m => show(m, 'error'),
+    warning: m => show(m, 'warning'), info: m => show(m, 'info')
+  };
 })();
 
 /* ── Modal ──────────────────────────────────────────────────── */
@@ -143,19 +145,33 @@ const Form = {
   }
 };
 
-/* ── Sidebar (Mobile) ───────────────────────────────────────── */
+/* ── Sidebar ────────────────────────────────────────────────── */
 function initSidebar() {
   const sidebar = document.querySelector('.sidebar');
   const toggleBtn = document.getElementById('sidebar-toggle');
   if (!sidebar || !toggleBtn) return;
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+      // Mobile: overlay toggle
+      sidebar.classList.toggle('open');
+    } else {
+      // Desktop: collapse toggle
+      sidebar.classList.toggle('collapsed');
+    }
   });
 
-  // Close on outside click
+  // Close on outside click for mobile only
   document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 900 && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+    if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Keep sidebar expanded on window resize > mobile
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
       sidebar.classList.remove('open');
     }
   });
@@ -195,7 +211,7 @@ function initNotifications() {
           navBadge.style.display = count > 0 ? '' : 'none';
         }
       }
-    } catch(e) { /* silent */ }
+    } catch (e) { /* silent */ }
   }
 
   pollNotifications();
@@ -226,9 +242,9 @@ function timeAgo(dateStr) {
   const d = new Date(dateStr);
   const diff = (Date.now() - d) / 1000;
   if (diff < 60) return 'just now';
-  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
-  return `${Math.floor(diff/86400)}d ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
 }
 
 /* ── Initialize ─────────────────────────────────────────────── */
