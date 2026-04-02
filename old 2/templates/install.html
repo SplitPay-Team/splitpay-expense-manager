@@ -1,0 +1,34 @@
+<div class="install-container">
+    <div class="install-card">
+        <h2><span class="material-icons">security</span> Installation - Step 1</h2>
+        
+        {{#if error}}
+        <div class="alert error">
+            <span class="material-icons">error</span>
+            {{error}}
+        </div>
+        {{/if}}
+        
+        <p class="install-description">Please enter the installation password to continue.</p>
+        
+        <form action="install.php?step=1" method="POST" class="install-form">
+            <div class="input-field-modern">
+                <span class="material-icons icon-left">vpn_key</span>
+                <input type="text" id="password" name="password" required placeholder=" " value="">
+                <label for="password">Installation Password</label>
+                <span class="input-help">Default password: admin123</span>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn primary">
+                    <span class="material-icons">arrow_forward</span>
+                    Next Step
+                </button>
+            </div>
+        </form>
+        
+        <div class="install-note">
+            <p><span class="material-icons">info</span> This password is configured in install.php</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="settlements-page">
+    <h2><span class="material-icons">payment</span> Outstanding Settlements</h2>
+    
+    {{#if settlements}}
+    <div class="settlements-list">
+        {{#each settlements}}
+        <div class="settlement-item">
+            <div class="settlement-info">
+                <div class="debtor-info">
+                    <span class="material-icons">person</span>
+                    <span class="debtor-name">{{debtor_name}}</span>
+                </div>
+                <div class="payment-info">
+                    <span class="payment-desc">{{description}}</span>
+                    <span class="outstanding-amount">${{outstanding}}</span>
+                </div>
+            </div>
+            
+            <div class="settlement-actions">
+                <div class="settlement-input-group">
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="amount-{{participant_id}}" 
+                               class="settlement-amount-input"
+                               placeholder="0.00" step="0.01" 
+                               min="0.01" max="{{outstanding}}" value="{{outstanding}}">
+                    </div>
+                    <button onclick="settlePayment({{participant_id}}, {{payment_id}}, '{{description}}')" 
+                            class="btn primary settle-btn">
+                        <span class="material-icons">payment</span>
+                        Settle
+                    </button>
+                </div>
+                <div class="settlement-status" id="status-{{participant_id}}"></div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="empty-state">
+        <span class="material-icons empty-icon">check_circle</span>
+        <h3>All Settled Up!</h3>
+        <p>No outstanding settlements at the moment</p>
+    </div>
+    {{/if}}
+</div>

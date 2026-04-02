@@ -1,0 +1,110 @@
+<div class="payment-form-container">
+    <h2><span class="material-icons">add_circle</span> Add New Payment</h2>
+    
+    {{#if error}}
+    <div class="alert error">
+        <span class="material-icons">error</span>
+        {{error}}
+    </div>
+    {{/if}}
+    
+    <form action="/add-payment" method="POST" class="payment-form" id="paymentForm">
+        <div class="form-section">
+            <h3>Payment Details</h3>
+            
+            <div class="input-field">
+                <span class="material-icons prefix">description</span>
+                <input type="text" id="description" name="description" required>
+                <label for="description">Description</label>
+            </div>
+            
+            <div class="input-field">
+                <span class="material-icons prefix">attach_money</span>
+                <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
+                <label for="amount">Amount</label>
+            </div>
+            
+            <div class="input-field">
+                <span class="material-icons prefix">calendar_today</span>
+                <input type="date" id="payment_date" name="payment_date" value="{{today}}" required>
+                <label for="payment_date" class="active">Payment Date</label>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Participants</h3>
+            
+            <div class="checkbox-field">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="include_myself" name="include_myself" checked>
+                    Include myself in the split
+                </label>
+                <small class="helper-text">When checked, you'll share the expense with others</small>
+            </div>
+            
+            <div class="search-field">
+                <span class="material-icons prefix">search</span>
+                <input type="text" id="userSearch" placeholder="Search users by name...">
+            </div>
+            
+            <div id="searchResults" class="search-results"></div>
+            
+            <div class="selected-users">
+                <h4>Selected Participants</h4>
+                <div id="selectedUsersList" class="selected-list"></div>
+                <input type="hidden" id="participants" name="participants" value="">
+            </div>
+        </div>
+        
+        <!-- Live Split Preview - Realtime calculation -->
+        <div class="split-preview-card" id="splitPreview" style="display: none;">
+            <div class="split-preview-header">
+                <span class="material-icons">calculate</span>
+                <h4>Split Summary</h4>
+            </div>
+            
+            <div class="split-preview-content">
+                <div class="split-row total">
+                    <span class="split-label">Total Amount:</span>
+                    <span class="split-value">$<span id="previewTotal">0.00</span></span>
+                </div>
+                
+                <div class="split-row">
+                    <span class="split-label">Number of People:</span>
+                    <span class="split-value" id="previewCount">0</span>
+                </div>
+                
+                <div class="split-row highlight">
+                    <span class="split-label">Each Person Pays:</span>
+                    <span class="split-value primary">$<span id="previewEach">0.00</span></span>
+                </div>
+                
+                <div class="split-row">
+                    <span class="split-label">Your share:</span>
+                    <span class="split-value" id="previewYourShare">$0.00</span>
+                </div>
+                
+                <div class="split-row">
+                    <span class="split-label">Others total:</span>
+                    <span class="split-value" id="previewOthersTotal">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="split-preview-note">
+                <span class="material-icons">info</span>
+                <small>Each person will owe $<span id="previewEachNote">0.00</span> for this expense</small>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn primary">
+                <span class="material-icons">save</span>
+                Create Payment
+            </button>
+            <a href="/dashboard" class="btn secondary">
+                <span class="material-icons">cancel</span>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

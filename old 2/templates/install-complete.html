@@ -1,0 +1,116 @@
+<div class="install-container">
+    <div class="install-card success">
+        <h2><span class="material-icons">check_circle</span> Installation Complete!</h2>
+        
+        {{#if success}}
+        <div class="alert success">
+            <span class="material-icons">check_circle</span>
+            {{success}}
+        </div>
+        {{/if}}
+        
+        <div class="install-complete">
+            <div class="check-icon">
+                <span class="material-icons">done_all</span>
+            </div>
+            
+            <p>Your application has been successfully installed!</p>
+            
+            <div class="install-actions">
+                <a href="/login" class="btn primary">
+                    <span class="material-icons">login</span>
+                    Go to Login
+                </a>
+                <a href="/install.php" class="btn secondary">
+                    <span class="material-icons">refresh</span>
+                    Reinstall
+                </a>
+            </div>
+            
+            <div class="security-note">
+                <h4><span class="material-icons">security</span> Security Note:</h4>
+                <p>For security reasons, you should delete or rename the install.php file after installation.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.install-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.install-card {
+    background-color: var(--surface-dark);
+    padding: 2.5rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.install-card.success {
+    border: 2px solid var(--success-color);
+}
+
+.install-description {
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.install-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--surface-light);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.check-icon {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.check-icon .material-icons {
+    font-size: 5rem;
+    color: var(--success-color);
+}
+
+.install-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.security-note {
+    padding: 1rem;
+    background-color: rgba(255, 183, 77, 0.1);
+    border: 1px solid var(--warning-color);
+    border-radius: 4px;
+    margin-top: 2rem;
+}
+
+.security-note h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--warning-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.install-form .btn {
+    width: 100%;
+}
+</style>

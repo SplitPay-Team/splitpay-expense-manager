@@ -1,0 +1,133 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+// Already logged in → go to dashboard
+if (!empty($_SESSION['user_id'])) {
+    header('Location: /pages/dashboard.php');
+    exit;
+}
+$csrf = $_SESSION['csrf_token'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<?= htmlspecialchars($csrf, ENT_QUOTES) ?>">
+  <title>Create Account — SplitPay</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div class="logo-icon">✦</div>
+      <h1>SplitPay</h1>
+    </div>
+
+    <p class="auth-subtitle">Create your account to start splitting expenses with your group.</p>
+
+    <div id="alert-container"></div>
+
+    <form id="register-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="display_name">Display Name <span class="required">*</span></label>
+        <input type="text" id="display_name" name="display_name" class="form-control"
+               placeholder="Your full name" autocomplete="name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="username">Username <span class="required">*</span></label>
+        <input type="text" id="username" name="username" class="form-control"
+               placeholder="lowercase_username" autocomplete="username" required>
+        <p class="form-hint">Lowercase letters, numbers, and underscores only.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" name="email" class="form-control"
+               placeholder="you@example.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="password">Password <span class="required">*</span></label>
+          <input type="password" id="password" name="password" class="form-control"
+                 placeholder="Min 8 characters" autocomplete="new-password" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password <span class="required">*</span></label>
+          <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                 placeholder="Repeat password" required>
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-btn">
+          Create Account
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/pages/login.php">Sign in</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="/assets/js/main.js"></script>
+<script>
+document.getElementById('register-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn       = document.getElementById('submit-btn');
+  const container = document.getElementById('alert-container');
+  container.innerHTML = '';
+
+  const data = {
+    display_name:     document.getElementById('display_name').value.trim(),
+    username:         document.getElementById('username').value.trim(),
+    email:            document.getElementById('email').value.trim(),
+    password:         document.getElementById('password').value,
+    confirm_password: document.getElementById('confirm_password').value
+  };
+
+  // Client-side validation
+  if (!data.display_name || !data.username || !data.email || !data.password) {
+    container.innerHTML = `<div class="alert alert-danger"><span class="alert-icon">✕</span><span>Please fill in all required fields.</span></div>`;
+    return;
+  }
+  if (data.password.length < 8) {
+    container.innerHTML = `<div class="alert alert-danger"><span class="alert-icon">✕</span><span>Password must be at least 8 characters.</span></div>`;
+    return;
+  }
+  if (data.password !== data.confirm_password) {
+    container.innerHTML = `<div class="alert alert-danger"><span class="alert-icon">✕</span><span>Passwords do not match.</span></div>`;
+    return;
+  }
+
+  Form.setLoading(btn, true);
+
+  try {
+    const res = await API.post('auth', 'register', data);
+    if (res.success) {
+      container.innerHTML = `<div class="alert alert-success"><span class="alert-icon">✓</span><span>Account created! Redirecting to login…</span></div>`;
+      setTimeout(() => window.location.href = '/pages/login.php', 1400);
+    } else {
+      container.innerHTML = `<div class="alert alert-danger"><span class="alert-icon">✕</span><span>${res.error || 'Registration failed. Please try again.'}</span></div>`;
+      Form.setLoading(btn, false);
+    }
+  } catch(err) {
+    container.innerHTML = `<div class="alert alert-danger"><span class="alert-icon">✕</span><span>Connection error: ${err.message}. Check your server/API path.</span></div>`;
+    Form.setLoading(btn, false);
+  }
+});
+</script>
+</body>
+</html>
