@@ -64,6 +64,7 @@ $stmtUP = $pdo->prepare("
   JOIN `groups` g ON g.group_id = p.group_id
   JOIN users u ON u.user_id = e.paid_by
   WHERE ep.user_id = ?
+    AND p.status <> 'settled'
   ORDER BY e.created_at DESC
   LIMIT 8
 ");
