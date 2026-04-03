@@ -71,6 +71,13 @@ $stmtUP = $pdo->prepare("
 $stmtUP->execute([$uid]);
 $userParticipations = $stmtUP->fetchAll();
 
+// Compute total share amount for recent participations
+$totalParticipationShares = array_reduce($userParticipations, function($carry, $up) {
+  $count = max(1, (int) $up['participant_count']);
+  $share = $up['amount'] / $count;
+  return $carry + $share;
+}, 0.0);
+
 $pageTitle  = 'Dashboard';
 $activePage = 'dashboard';
 $breadcrumbs = [['label' => 'Dashboard']];
@@ -125,6 +132,9 @@ include dirname(__DIR__) . '/templates/header.php';
           <?php endforeach; ?>
         </tbody>
       </table>
+    </div>
+    <div class="card-footer" style="color: #a8a8a8; font-size: 17px; text-align: center; padding: 10px 0px; background: #161616; border-top: 1px solid #a0a0a0;">
+      Total share amount : <strong><?= money($totalParticipationShares) ?></strong>
     </div>
   </div>
 <?php endif; ?>
